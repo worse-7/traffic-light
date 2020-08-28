@@ -7,9 +7,10 @@ public class TrafficLight {
         this.state = state;
     }
 
-    TrafficLight() {
-        state = new RedTrafficLight();
+    TrafficLight(ITrafficLight trafficLight) {
+        this.setState(trafficLight);
     }
+
     public void changeState() {
         state.change(this);
     }
