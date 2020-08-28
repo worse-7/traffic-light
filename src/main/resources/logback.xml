@@ -1,0 +1,62 @@
+<configuration>
+
+    <property resource="application.properties"/>
+
+    <if condition='property("profile").contains("prod")'>
+        <then>
+            <appender name="jsonFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+                <File>${logging.path}/cms-reporting.log</File>
+                <encoder>
+                    <pattern>
+                        [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1}:%M %L - %msg%n
+                    </pattern>
+                </encoder>
+
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${logging.path}/cms-reporting.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                    <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                        <maxFileSize>1024MB</maxFileSize>
+                    </timeBasedFileNamingAndTriggeringPolicy>
+                    <maxHistory>24</maxHistory>
+                    <totalSizeCap>4000MB</totalSizeCap>
+                </rollingPolicy>
+            </appender>
+
+            <root level="INFO">
+                <appender-ref ref="jsonFileAppender"/>
+            </root>
+
+        </then>
+    </if>
+
+    <if condition='property("profile").contains("local")'>
+        <then>
+            <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+
+                <encoder>
+                    <Pattern>.%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n
+                    </Pattern>
+                </encoder>
+
+            </appender>
+
+            <root level="INFO">
+                <appender-ref ref="jsonConsoleAppender"/>
+            </root>
+
+        </then>
+    </if>
+
+    <appender name="blankLineAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%m%n%m%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="blankLineLogger" level="ALL" additivity="false">
+        <appender-ref ref="blankLineAppender"/>
+    </logger>
+
+</configuration>
